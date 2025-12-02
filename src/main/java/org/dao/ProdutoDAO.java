@@ -3,19 +3,19 @@ package org.dao;
 import jakarta.transaction.SystemException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.model.Professor;
+import org.model.Produto;
 import org.utils.HibernateUtil;
 
 import java.util.List;
 
-public class ProfessorDAO {
+public class ProdutoDAO {
 
-    public void salarProfessor(Professor professor) {
+    public void salarProfessor(Produto produto) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             //Inicia Transação
             transaction = session.beginTransaction();
-            session.persist(professor);
+            session.persist(produto);
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
@@ -25,20 +25,20 @@ public class ProfessorDAO {
         }
     }
 
-    public Professor buscarProfessorPorId(Long id) {
+    public Produto buscarProfessorPorId(Long id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
-            return session.find(Professor.class, id);
+            return session.find(Produto.class, id);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public List<Professor> buscarProfessores(){
+    public List<Produto> buscarProfessores(){
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
-            return session.createQuery("from Professor",Professor.class).list();
+            return session.createQuery("from Professor",Produto.class).list();
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -46,7 +46,7 @@ public class ProfessorDAO {
         }
     }
 
-    public void atualizarProfessor(Professor professor) {
+    public void atualizarProfessor(Produto professor) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
@@ -65,7 +65,7 @@ public class ProfessorDAO {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            Professor professor =session.find(Professor.class, id);
+            Produto professor =session.find(Produto.class, id);
 
             if(professor!=null){
                 session.remove(professor);

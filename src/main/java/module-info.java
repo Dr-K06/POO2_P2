@@ -12,5 +12,6 @@ module org.jp_p2 {
     opens org.model to
             org.hibernate.orm.core, // Módulo principal do Hibernate
             jakarta.persistence;
+    opens org to jakarta.persistence, org.hibernate.orm.core;
 
 }
