@@ -1,58 +1,47 @@
 package org;
 
-import org.dao.ProdutoDAO;
-import org.model.Produto;
-import org.utils.HibernateUtil;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import org.utils.HibernateUtil; // Importante para fechar a conexão ao sair
 
-public class Main {
+import java.io.IOException;
 
-    public static void main (String[] args){
+public class Main extends Application {
 
-        /*
-        EntityManagerFactory enf = Persistence.createEntityManagerFactory("un-jpa");
+    @Override
+    public void start(Stage stage) {
+        try {
+            // CARREGANDO O FXML
+            // Certifique-se de que o nome do arquivo aqui é EXATAMENTE o nome do seu arquivo .fxml
+            // e que ele está na pasta 'resources'
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/interface_paciente.fxml")); // <--- CONFIRA O NOME AQUI
 
-        EntityManager em = enf.createEntityManager();
-        em.getTransaction().begin();
-        Usuario usuario = new Usuario();
-        usuario.setNome("Carlos Eduardo S. Costa");
-        usuario.setEmail("ocarlosdigital09@gmail.com");
-        usuario.setSenha("123456");
-        em.persist(usuario);
-        em.getTransaction().commit();
-        em.close();
- */
-        ProdutoDAO dao = new ProdutoDAO();
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
 
-        System.out.println("------[ Create Professor ] -------");
-        Produto professor = new Produto();
-        professor.setNome("DANIEL C. SILVA");
-        professor.setPreco(0.0);
-        professor.setQuantidade(0);
-        dao.salarProfessor(professor);
+            stage.setTitle("Gerenciamento de Produtos em um Estoque");
+            stage.setScene(scene);
+            stage.show();
 
-        System.out.println("");
-        System.out.println("------[ Buscar por ID do Professor ] -------");
-        Produto produtoAux = dao.buscarProfessorPorId(1L);
-        System.out.println(produtoAux);
-
-        System.out.println("");
-        System.out.println("------[ Update Professor ] -------");
-        if (produtoAux != null) {
-            professor.setPreco(0.0);
-            professor.setQuantidade(0);
-            professor.setNome("Miguel C. SILVA");
-            System.out.printf("Professor atualizado: " + dao.buscarProfessorPorId(1L));
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("ERRO CRÍTICO: Não foi possível carregar o arquivo FXML.");
+            System.out.println("Verifique se o arquivo está na pasta 'resources' e se o nome está correto.");
         }
+    }
 
-        System.out.println("");
-        System.out.println("------[ Listar todos Professores ] -------");
-        dao.buscarProfessores().forEach(System.out::println);
+    // Este método é chamado automaticamente quando você fecha a janela do programa
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+        System.out.println("Encerrando conexão com o banco de dados...");
+        HibernateUtil.shutdown(); // Fecha o Hibernate corretamente
+    }
 
-        System.out.println("");
-        System.out.println("------[ Deletar Professor ] -------");
-        if (dao.buscarProfessorPorId(1L) != null) {
-            dao.deletarProfessor(1L);
-        }
-        HibernateUtil.shutdown();
+    public static void main(String[] args) {
+        launch(args); // Esse comando que inicia o JavaFX
     }
 }
